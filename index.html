@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#3b2030">
+<meta name="description" content="Four illustrated celebrations, one beautiful forever. Akanksha & Vikash · 10–13 December 2026 · Jhansi.">
+<title>Akanksha & Vikash · Wedding Invitation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script defer src="image-config.js"></script>
+<script defer src="theme-config.js"></script>
+<script defer src="content-config.js"></script>
+<script defer src="script.js"></script>
+</head>
+<body class="home-page">
+<a href="#chapters" class="skip-link">Skip to functions</a>
+<div class="page-shell">
+<header class="masthead">
+  <div class="brand">✦ <span id="brandInitials">A <em>&amp;</em> V</span> ✦</div>
+  <div class="blessing" id="headerBlessing">॥ श्री गणेशाय नमः ॥</div>
+  <nav class="masthead-actions" aria-label="Quick navigation">
+    <a class="top-bollywood" href="bollywood.html" id="topBollywood">🎬 Bollywood dress-up ↗</a>
+    <button type="button" data-open-rsvp id="topRsvp">RSVP ↗</button>
+  </nav>
+</header>
+<main>
+  <section class="invitation-heading" aria-labelledby="title">
+    <p class="overline" id="headingEyebrow">✧ TOGETHER WITH OUR FAMILIES ✧</p>
+    <h1 id="title"><span id="brideName">Akanksha</span> <span class="ampersand">&amp;</span> <span id="groomName">Vikash</span></h1>
+    <p class="invitation-subtitle"><span id="introLead">Four celebrations.</span> <em id="introEm">One beautiful forever.</em></p>
+    <div class="date-loc"><span id="headingDates">10—13 DECEMBER 2026</span><span class="date-separator">✧</span><span id="headingPlace">JHANSI, UTTAR PRADESH</span></div>
+  </section>
+  <section class="chapter-area" id="chapters" aria-labelledby="chapter-title">
+    <div class="section-line"><span></span><h2 id="chapter-title"><span id="sectionEn">The celebrations</span> <i>✤</i> <span id="sectionHi">चार रंग, एक प्रेम कथा</span></h2><span></span></div>
+    <div class="chapter-grid" id="chapterGrid" aria-label="Four wedding functions">
+      <!-- Four cards are created automatically from content-config.js -->
+    </div>
+    <p class="theme-note" id="themeNote">An invitation to celebrate each tradition in its own colours and spirit.</p>
+  </section>
+  <section class="footer-strip" aria-label="Venue and guest information">
+    <div class="venue-info"><span class="venue-icon" aria-hidden="true">⌘</span><div>
+      <p class="venue-label" id="venueLabel">THE WEDDING VENUE</p>
+      <h2 id="venueName">Bihari Ji Resort Garden</h2>
+      <p id="venueAddress">Opp. Hansraj School · Shivpuri Road · Jhansi</p>
+    </div></div>
+    <div class="quick-actions">
+      <a class="quick-button" id="directionsLink" href="https://www.google.com/maps/search/?api=1&amp;query=Bihari+Ji+Resort+Garden+Shivpuri+Road+Jhansi+Uttar+Pradesh" target="_blank" rel="noopener noreferrer">⌖ <span id="directionsText">Directions</span></a>
+      <button class="quick-button" id="calendarBtn" type="button">▦ <span id="calendarText">Calendar</span></button>
+      <button class="quick-button primary" data-open-rsvp type="button">♡ <span id="footerRsvpText">RSVP</span></button>
+    </div>
+  </section>
+</main>
+<footer class="micro-footer"><span id="footerMessage">With love &amp; the blessings of our families</span><span id="footerNames">Akanksha ✦ Vikash</span></footer>
+</div>
+
+<dialog class="detail-dialog" id="detailDialog" aria-labelledby="detailTitle">
+  <div class="dialog-inner">
+    <button class="close-dialog" type="button" data-close-dialog aria-label="Close details">×</button>
+    <div class="dialog-art" id="detailArt"><img id="detailImage" alt=""><img id="detailSecondaryImage" alt="" hidden></div>
+    <div class="dialog-info">
+      <p class="dialog-kicker" id="detailWhen"></p>
+      <h2 id="detailTitle"></h2>
+      <p class="dialog-inspiration" id="detailInspiration"></p>
+      <p id="detailDescription"></p>
+      <p class="dialog-dress" id="detailDress"></p>
+      <div class="dialog-swatches" id="detailSwatches" aria-label="Colour palette"></div>
+      <a href="bollywood.html" class="dialog-special-link" id="detailLink" hidden>🎬 Explore Bollywood costume ideas ↗</a>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="rsvp-dialog" id="rsvpDialog" aria-labelledby="rsvpTitle">
+ <div class="rsvp-wrap">
+  <button class="close-dialog" type="button" data-close-rsvp aria-label="Close RSVP">×</button>
+  <div class="rsvp-top"><span class="rsvp-ornament">❀ ✧ ❀</span><p class="overline" id="rsvpIntro">THE JOY OF TOGETHERNESS</p><h2 id="rsvpTitle">Will you join us?</h2><p id="rsvpSubtitle">Prepare a WhatsApp RSVP message. No details are stored.</p></div>
+  <form id="rsvpForm"><label for="guestName">Your name</label><input id="guestName" name="guestName" required maxlength="100" placeholder="Full name" autocomplete="name">
+  <div class="two-fields"><div><label for="guestCount">Guests</label><select id="guestCount" name="guestCount"><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option></select></div><div><label for="attendance">Attending?</label><select id="attendance" name="attendance"><option value="Yes, delighted to attend">Yes, delighted!</option><option value="Still confirming">Still confirming</option><option value="Unable to attend">Unable to attend</option></select></div></div>
+  <label for="guestNote">A message (optional)</label><textarea id="guestNote" name="guestNote" rows="2" maxlength="300" placeholder="Your blessings and wishes..."></textarea>
+  <button type="submit" class="send-rsvp">Prepare WhatsApp message ↗</button><button type="button" class="copy-rsvp" id="copyRSVP">Copy RSVP message instead</button><p class="rsvp-disclaimer">WhatsApp opens a draft; you choose the recipient and tap Send.</p>
+  </form>
+ </div>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

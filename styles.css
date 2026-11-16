@@ -194,3 +194,26 @@ dialog{border:0;padding:0;box-shadow:0 22px 85px #21132380;max-height:min(91vh,7
  .home-page .card-bottom{font-size:6.7px}
  .home-page .bollywood-feature{font-size:9px}
 }
+
+/* Language switch, available on both the main invitation and Bollywood page. */
+.language-switch{display:inline-flex;align-items:center;gap:2px;border:1px solid #ad987c85;border-radius:999px;padding:3px;white-space:nowrap;background:#fff8eddd;flex-shrink:0}
+.language-switch button,.bollywood-page .language-switch button{font-family:'DM Sans','Noto Serif Devanagari',sans-serif;font-size:10px;letter-spacing:0;text-transform:none;line-height:1.25;padding:6px 10px;border:0;border-radius:999px;background:transparent;color:#583d44;font-weight:650;white-space:nowrap}
+.language-switch button[aria-pressed="true"]{background:#613144;color:#fff9ee;box-shadow:0 1px 4px #452b332b}
+.bollywood-page .language-switch{background:#231c3a;border-color:#8f7893}
+.bollywood-page .language-switch button{color:#ffe6c1}
+.bollywood-page .language-switch button[aria-pressed="true"]{background:#dfb675;color:#20132f}
+html[lang="hi"] body{font-family:var(--dev),sans-serif}
+html[lang="hi"] .invitation-heading h1,html[lang="hi"] .invitation-subtitle,html[lang="hi"] .card-copy h3,html[lang="hi"] .card-description,html[lang="hi"] .dialog-info h2,html[lang="hi"] .spotlight-hero h1,html[lang="hi"] .spotlight-copy h2,html[lang="hi"] .spotlight-copy p,html[lang="hi"] .costumes h2,html[lang="hi"] .costume-panels,html[lang="hi"] .pinterest-feature h2,html[lang="hi"] .pinterest-feature p{font-family:var(--dev),serif;letter-spacing:0;line-height:1.35}
+html[lang="hi"] .card-copy h3{font-size:clamp(22px,2.1vw,31px);line-height:1.25}
+html[lang="hi"] .card-description{font-size:clamp(13px,1.05vw,16px);line-height:1.35}
+html[lang="hi"] .card-deity,html[lang="hi"] .card-kicker,html[lang="hi"] .card-bottom{letter-spacing:0;line-height:1.4}
+html[lang="hi"] .card-kicker{font-size:9px}
+html[lang="hi"] .card-bottom{font-size:9px}
+html[lang="hi"] .invitation-heading h1{font-size:clamp(38px,5vw,64px)}
+html[lang="hi"] .invitation-subtitle{font-size:clamp(14px,1.5vw,19px)}
+html[lang="hi"] .spotlight-hero h1{font-size:clamp(39px,5.2vw,76px)}
+html[lang="hi"] .spotlight-copy h2{font-size:clamp(26px,3vw,45px)}
+html[lang="hi"] .date-loc,html[lang="hi"] .overline{letter-spacing:0}
+@media(max-width:1000px){.masthead-actions{gap:10px}.top-bollywood{font-size:10px}}
+@media(max-width:700px){.language-switch button,.bollywood-page .language-switch button{padding:5px 7px;font-size:9px}.masthead-actions{gap:7px}.masthead-actions>a{font-size:9px}.masthead-actions>button{padding:7px 8px}.home-page .masthead .top-bollywood{display:none}.home-page .masthead .brand{font-size:17px}html[lang="hi"] .home-page .card-copy h3{font-size:clamp(18px,4.25vw,26px)}html[lang="hi"] .home-page .card-description{font-size:12px;line-height:1.3}html[lang="hi"] .home-page .card-deity{font-size:8px;line-height:1.35}html[lang="hi"] .home-page .card-bottom{font-size:7.5px}.home-page .bollywood-feature{line-height:1.4}}
+@media(max-width:390px){.language-switch button,.bollywood-page .language-switch button{padding:5px;font-size:8.5px}.bollywood-page .masthead .brand-glyph{display:none}.bollywood-page .masthead-actions a{font-size:8px}html[lang="hi"] .home-page .card-copy h3{font-size:18px}html[lang="hi"] .home-page .card-description{font-size:11.5px}}

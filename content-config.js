@@ -70,10 +70,10 @@ window.WEDDING_CONTENT = {
       title: 'Varmala & Pheras',
       date: 'SAT–SUN · 12–13 DEC',
       when: '12–13 DECEMBER 2026 · TIMINGS TO BE CONFIRMED',
-      inspiration: 'Siya–Ram × Shiv–Shakti · Sacred union',
+      inspiration: 'Shiv–Shakti · Sacred union',
       description: 'Varmala, wedding Bhoj and seven sacred vows, followed by Vidai.',
       dress: 'THE COLOUR STORY · RED & GOLD',
-      details: 'Inspired by the timeless companionship of Siya–Ram and the sacred union of Shiv–Parvati: Varmala and wedding Bhoj on 12 December; Pheras during the wedding celebrations; Vidai planned for 13 December. Ceremony timings will be confirmed.',
+      details: 'May our union mirror the eternal bond of Shiv–Parvati, where love is devotion and togetherness is sacred: Varmala and Wedding Bhoj on 12 December, followed by the sacred Pheras and early-morning Vidai on 13 December. Exact ceremony timings will be confirmed.',
       detailDress: 'Suggested palette: Traditional ethnic wear of your choice. No specific colour palette—feel free to dress in your festive best! Varmala and Bhoj: 12 December. Pheras and Vidai: 12–13 December. Exact timings to be confirmed.',
       imageKey: 'pheras',
      

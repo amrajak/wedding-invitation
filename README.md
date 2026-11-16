@@ -1,76 +1,44 @@
-# Akanksha & Vikash — Four-Theme Wedding Invitation
+# Akanksha & Vikash — Bilingual wedding invitation
 
-A compact two-by-two wedding invitation focused on ceremony **colours, symbolism and aesthetic**. Bollywood Night has its own page, accessible from an unmistakable button inside the green Mehendi & Sangeet card (and from the top menu).
+A compact four-theme wedding invitation with a separate Bollywood Night lookbook, now in **English and Hindi**.
 
-## To edit the website, change ONLY these three files
+## One-tap language switch
 
-| File | What you can edit |
-| --- | --- |
-| **image-config.js** | Image filenames and Pinterest board URL. Use PNG, JPG/JPEG, WebP, SVG. Put images in `assets/`. |
-| **theme-config.js** | Every card's background gradient, text colour, heading colour, accent and colour swatches. |
-| **content-config.js** | Couple's names, dates, all four card headings, stories, dress code, function description, Bollywood page text, venue, directions link, RSVP message and labels. |
+The **English / हिन्दी** switch in the top header works on both `index.html` and `bollywood.html`. Guests can change languages without a page reload. The site remembers their preference where browser storage is available and passes the selected language in links to the Bollywood page. It defaults to English.
 
-No HTML or CSS edits required for regular changes.
+Content translated: headings, 4 cards, dates, descriptions, colour themes, expanded details, wedding venue, buttons, RSVP form, WhatsApp message wording, Bollywood page, costume inspiration categories, Pinterest captions and fallback instructions. Image artwork that contains baked-in lettering is not translated automatically.
 
-### Example: make the Mata Pujan card more coral pink
+## Edit text without touching HTML
 
-Open `theme-config.js`, then edit:
+- **`content-config.js`** — English text, including event times and RSVP interface labels.
+- **`hindi-config.js`** — Hindi text, in the same structure. You can edit Hindi event descriptions and text here.
+- **`theme-config.js`** — colours, gradients and swatches for the four themes.
+- **`image-config.js`** — image filenames, Pinterest board URL, and optional local image gallery.
 
-```js
-mata: {
-  background: '#FFDDE5',
-  background2: '#F9B9C6',
-  heading: '#852F49',
-  text: '#633C4A',
-  accent: '#C34E72',
-  palette: ['#EF96B7', '#E86D61', '#F5A243']
-}
-```
+Make sure both English and Hindi event descriptions are updated if you change any date or time. Keep the `events` keys `mata`, `haldi`, `sangeet`, `wedding` in both language files.
 
-### Example: change the Haldi card's wording
+## Change your existing card images
 
-Open `content-config.js` > `events` > `haldi` and edit:
+Copy your PNG, JPEG, WebP or SVG into `assets/`, then change ONLY the relevant filename in `image-config.js`.
 
-```js
-title: 'Haldi',
-description: 'A joyful splash of yellow before a beautiful new chapter.',
-dress: 'THE COLOUR STORY · YELLOW, WHITE & GOLD',
-```
+**Important:** If you have already replaced artwork in your existing GitHub Pages website, use the `Bilingual_Update_Only.zip` rather than the full website ZIP. This preserves your existing `assets/`, `image-config.js`, and `theme-config.js`. The update does replace `content-config.js`, so copy over any custom wording you've edited into the new English config. Add or edit the Hindi equivalents in `hindi-config.js`.
 
-### Example: replace the wedding picture
+## Wedding image decision
 
-Copy `new-wedding-photo.jpeg` into `assets/`. In `image-config.js`:
+The combined **Varmala & Pheras** card now uses `imageKey: 'pheras'`, showing the Pheras artwork on both the card and its detail popup. There is no second image in the popup. To use a different image, change `pheras` in `image-config.js`.
 
-```js
-varmala: 'new-wedding-photo.jpeg',
-```
+## Dress code
 
-The wedding card will show your new image. The expanded popup also has an optional second Pheras picture controlled via `phere-vidai.webp` (key `pheras`).
+The four cards retain their requested **visual colour themes**, but the wedding card's suggested attire is *any colour of traditional Indian wear*, not a prescribed red/gold dress code.
 
-## Wedding structure
+## Publish with GitHub Pages
 
-- Mata Pujan — pink / coral / orange (10 Dec, 10:00 AM)
-- Haldi — yellow / ivory (11 Dec)
-- Mehendi & Sangeet — green / sage (11 Dec); prominent Bollywood Night page link
-- Varmala & Pheras — red / gold (12–13 Dec), including Bhoj and Vidai
+Upload `index.html`, `bollywood.html`, `styles.css`, `script.js`, `image-config.js`, `theme-config.js`, `content-config.js`, `hindi-config.js`, and your `assets/` directory to the site root. GitHub → Settings → Pages → Deploy from main branch, root. Confirm the new `hindi-config.js` has been uploaded; otherwise Hindi text won't appear.
 
-The exact times of Haldi, Mehendi, Sangeet, Varmala, and Pheras are left unconfirmed in the copy intentionally. Confirm before sending.
+## RSVP / Pinterest
 
-## Pinterest
+RSVP opens a WhatsApp draft that guests send themselves. No guest responses are stored on this website. The Pinterest board preview may be blocked by browsers or privacy tools; the direct board link remains available.
 
-`image-config.js` contains your public Pinterest URL. The Bollywood page loads Pinterest's official board embed automatically. Some browsers and privacy blockers may hide it. To guarantee a visible mini-gallery, add images you own or may republish to `assets/` and list their filenames in `WEDDING_BOLLYWOOD_LOOKBOOK`.
+## Before sharing
 
-## GitHub Pages publishing
-
-1. Unzip the folder.
-2. Upload **all files, including assets/**, to the root of your GitHub repository.
-3. Enable Pages from the main branch/root directory.
-4. Open the public GitHub Pages URL; test on a phone and a logged-out browser.
-
-## RSVP privacy
-
-The website does not store guest data. It prepares a WhatsApp draft that each guest chooses to send. The calendar button downloads a dates-only `.ics` reminder.
-
-## Note on hosting
-
-Opening local files directly should work for most functions. Internet access is required for the Google fonts, maps, and official Pinterest embed. For the full experience, publish via GitHub Pages.
+Confirm the still-unknown Haldi, Mehendi/Sangeet and wedding ceremony timings. Also confirm the proposed Vidai date of 13 December 2026. Dates are not inferred in this website.

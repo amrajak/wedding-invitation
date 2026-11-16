@@ -3,11 +3,14 @@
  * No invitation wording, theme colours, or image names need editing here.
  * See content-config.js, theme-config.js and image-config.js instead.
  */
-const CONTENT = window.WEDDING_CONTENT || {};
+let CONTENT = window.WEDDING_CONTENT || {};
+let CURRENT_LANG = 'en';
+let CURRENT_DETAIL_KEY = null;
+const UI = () => CONTENT.ui || {};
 const COLORS = window.WEDDING_COLORS || {};
 const IMAGES = window.WEDDING_IMAGES || {};
-const HOME = CONTENT.site || {};
-const EVENTS = CONTENT.events || {};
+let HOME = CONTENT.site || {};
+let EVENTS = CONTENT.events || {};
 const EVENTS_ORDER = ['mata', 'haldi', 'sangeet', 'wedding'];
 const byId = id => document.getElementById(id);
 const textAt = (id, value) => { const el = byId(id); if (el && value != null) el.textContent = value; };
@@ -60,8 +63,8 @@ function renderCards() {
     const dots=(theme.palette||[]).map(color=>`<span style="background:${/^#[0-9a-f]{3,8}$/i.test(color)?color:'#ded1bd'}" title="${escapeHTML(color)}"></span>`).join('');
     const article=document.createElement('article');article.className=`event-card ${key}-card`;
     article.setAttribute('style',colourStyles(theme));
-    article.innerHTML=`<button type="button" class="card-main" data-card="${key}" aria-label="Read ${escapeHTML(e.title)} theme and details">
-       <div class="art-panel"><img src="${image}" alt="${escapeHTML(e.inspiration)} inspired wedding illustration" loading="${i<2?'eager':'lazy'}"><span class="art-corner">${['I','II','III','IV'][i]}</span></div>
+    article.innerHTML=`<button type="button" class="card-main" data-card="${key}" aria-label="${escapeHTML(e.title)} ${escapeHTML(UI().cardAria||'theme and details')}">
+       <div class="art-panel"><img src="${image}" alt="${escapeHTML(e.inspiration)} ${escapeHTML(UI().imageAlt||'wedding illustration')}" loading="${i<2?'eager':'lazy'}"><span class="art-corner">${['I','II','III','IV'][i]}</span></div>
        <div class="card-copy">
           <p class="card-kicker"><span>${escapeHTML(e.date)}</span><span>${['I','II','III','IV'][i]} / IV</span></p>
           <h3>${escapeHTML(e.title)}</h3>
@@ -69,13 +72,14 @@ function renderCards() {
           <p class="card-description">${escapeHTML(e.description)}</p>
           <div class="card-bottom"><span class="dress-line"><span class="swatch-mini" aria-hidden="true">${dots}</span><span>${escapeHTML(e.dress)}</span></span><span class="more-link">${escapeHTML(HOME.detailButton||'Details')} ↗</span></div>
        </div></button>
-       ${e.showBollywoodLink?`<a class="bollywood-feature" href="bollywood.html" aria-label="Open the Bollywood Night dress code and outfit inspiration">${escapeHTML(HOME.bollywoodButton||'🎬 BOLLYWOOD NIGHT · SEE THE LOOKBOOK ↗')}</a>`:''}`;
+       ${e.showBollywoodLink?`<a class="bollywood-feature" href="bollywood.html" aria-label="${escapeHTML(HOME.bollywoodButton||'Bollywood Night lookbook')}">${escapeHTML(HOME.bollywoodButton||'🎬 BOLLYWOOD NIGHT · SEE THE LOOKBOOK ↗')}</a>`:''}`;
     grid.append(article);
   });
   grid.querySelectorAll('[data-card]').forEach(button=>button.addEventListener('click',()=>openEvent(button.dataset.card)));
 }
 function openEvent(key) {
   const e=EVENTS[key],dialog=byId('detailDialog');if(!e||!dialog)return;
+  CURRENT_DETAIL_KEY=key;
   textAt('detailTitle',e.title);textAt('detailWhen',e.when);
   textAt('detailInspiration',e.inspiration);textAt('detailDescription',e.details);textAt('detailDress',e.detailDress);
   const image=byId('detailImage'),second=byId('detailSecondaryImage'),art=byId('detailArt');
@@ -99,25 +103,26 @@ function rsvpText(){
   const form=byId('rsvpForm');if(!form)return null;
   const name=form.elements.guestName.value.trim();if(!name){form.elements.guestName.reportValidity();return null;}
   const intro=CONTENT.rsvp?.messageGreeting||'Hello! My RSVP for the wedding:';
+  const ui=UI();
   const note=form.elements.guestNote.value.trim();
-  return `${intro}\nName: ${name}\nGuests: ${form.elements.guestCount.value}\nResponse: ${form.elements.attendance.value}${note?'\nMessage: '+note:''}\nWith love!`;
+  return `${intro}\n${ui.rsvpName||'Name'}: ${name}\n${ui.rsvpGuests||'Guests'}: ${form.elements.guestCount.value}\n${ui.rsvpResponse||'Response'}: ${form.elements.attendance.value}${note?'\n'+(ui.rsvpMessage||'Message')+': '+note:''}\n${ui.rsvpClosing||'With love!'}`;
 }
 function setupRSVP(){
   const form=byId('rsvpForm');if(!form)return;
-  form.addEventListener('submit',e=>{e.preventDefault();const msg=rsvpText();if(!msg)return;window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank','noopener,noreferrer');toast('WhatsApp draft opened. Choose a recipient and send.');});
+  form.addEventListener('submit',e=>{e.preventDefault();const msg=rsvpText();if(!msg)return;window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank','noopener,noreferrer');toast(UI().whatsappToast||'WhatsApp draft opened. Choose a recipient and send.');});
   const btn=byId('copyRSVP');if(btn)btn.addEventListener('click',async()=>{
     const msg=rsvpText();if(!msg)return;
-    try{await navigator.clipboard.writeText(msg);toast('RSVP text copied.');}catch{toast('Please use the WhatsApp option to share your RSVP.');}
+    try{await navigator.clipboard.writeText(msg);toast(UI().copiedToast||'RSVP text copied.');}catch{toast(UI().copyFailedToast||'Please use the WhatsApp option to share your RSVP.');}
   });
 }
 function setupCalendar(){
   const btn=byId('calendarBtn');if(!btn)return;
   btn.addEventListener('click',()=>{
     const eventLines=EVENTS_ORDER.map(key=>EVENTS[key]?.title).filter(Boolean).join(' · ');
-    const content=`BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Wedding Invitation//EN\r\nBEGIN:VEVENT\r\nUID:akanksha-vikash-dec2026@example.invalid\r\nDTSTAMP:20261115T000000Z\r\nDTSTART;VALUE=DATE:20261210\r\nDTEND;VALUE=DATE:20261214\r\nSUMMARY:${escapeICS((HOME.bride||'')+' & '+(HOME.groom||'')+' — Wedding Celebrations')}\r\nDESCRIPTION:${escapeICS(eventLines+'. Exact timings to be confirmed.')}\r\nLOCATION:${escapeICS((CONTENT.venue?.name||'')+', '+(CONTENT.venue?.address||''))}\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n`;
+    const content=`BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Wedding Invitation//EN\r\nBEGIN:VEVENT\r\nUID:akanksha-vikash-dec2026@example.invalid\r\nDTSTAMP:20261115T000000Z\r\nDTSTART;VALUE=DATE:20261210\r\nDTEND;VALUE=DATE:20261214\r\nSUMMARY:${escapeICS((HOME.bride||'')+' & '+(HOME.groom||'')+' — '+(UI().calendarSummary||'Wedding Celebrations'))}\r\nDESCRIPTION:${escapeICS(eventLines+'. '+(UI().calendarTimings||'Exact timings to be confirmed.'))}\r\nLOCATION:${escapeICS((CONTENT.venue?.name||'')+', '+(CONTENT.venue?.address||''))}\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n`;
     const url=URL.createObjectURL(new Blob([content],{type:'text/calendar;charset=utf-8'}));
     const link=document.createElement('a');link.href=url;link.download='Wedding-10-13-Dec-2026.ics';link.click();setTimeout(()=>URL.revokeObjectURL(url),1500);
-    toast('Calendar file downloaded.');
+    toast(UI().calendarToast||'Calendar file downloaded.');
   });
 }
 function setBollywoodText(){
@@ -132,7 +137,7 @@ function setBollywoodText(){
     if(sub)sub.textContent=c.subtitle||'';if(date)date.textContent=c.dateLine||'';
   }
   const intro=document.querySelector('.spotlight-copy');if(intro){
-    const label=intro.querySelector('.spotlight-overline'),heading=intro.querySelector('h2'),story=intro.querySelector(':scope > p'),dress=intro.querySelector('.dress-callout');
+    const label=intro.querySelector('.spotlight-overline'),heading=intro.querySelector('h2'),story=intro.querySelector(':scope > p:not(.spotlight-overline)'),dress=intro.querySelector('.dress-callout');
     if(label)label.textContent=c.storyLabel||'';if(heading)heading.textContent=c.heading||'';if(story)story.textContent=c.story||'';
     if(dress){const h=dress.querySelector('strong'),p=dress.querySelector('p');if(h)h.textContent=c.dressLabel||'';if(p)p.textContent=c.dressText||'';}
   }
@@ -141,17 +146,48 @@ function setBollywoodText(){
     const h=pinterest.querySelector('h2'),p=pinterest.querySelector(':scope > p:not(.spotlight-overline)'),link=byId('pinterestBoardLink');
     if(h)h.textContent=c.pinterestHeading||'';if(p)p.textContent=c.pinterestIntro||'';if(link)link.textContent=c.pinterestLink||'';
   }
-  const footer=document.querySelector('.spotlight-footer');if(footer){const span=footer.querySelector('span'),a=footer.querySelector('a');if(span)span.textContent=c.footerNote||'';if(a)a.textContent=c.backLabel||'← Back to invitation';}
+  const costumeCTA=intro?.querySelector('.spotlight-cta');
+  if(costumeCTA)costumeCTA.textContent=UI().findCharacter||'Find your character ↘';
+  const overline=pinterest?.querySelector('.spotlight-overline');
+  if(overline)overline.textContent=UI().pinterestOverline||'THE BOLLYWOOD LOOKBOOK';
+  const pinterestFallback=pinterest?.querySelector('.pinterest-fallback');
+  if(pinterestFallback){pinterestFallback.firstChild.textContent=(UI().pinterestFallback||'Pinterest may block previews in some browsers.')+' ';
+   const a=pinterestFallback.querySelector('a');if(a)a.textContent=UI().pinterestFallbackLink||'open the full board';}
+  const gallery=byId('pinterestLocalGallery');if(gallery)gallery.setAttribute('aria-label',UI().pinterestGalleryLabel||'Outfit inspiration');
+  const footer=document.querySelector('.spotlight-footer');if(footer){const span=footer.querySelector('span'),a=footer.querySelector('a');if(span)span.textContent=c.footerNote||'';if(a)a.textContent=UI().backToCelebrations||c.backLabel||'← Back to invitation';}
+}
+let CURRENT_COSTUME_KEY='retro';
+function renderCostumes(){
+  const tabs=[...document.querySelectorAll('[data-costume-tab]')];
+  if(!tabs.length)return;
+  const choices=CONTENT.bollywood?.costumeCategories||{};
+  const info=choices[CURRENT_COSTUME_KEY]||choices.retro;
+  if(!info)return;
+  tabs.forEach(btn=>{
+    const active=btn.dataset.costumeTab===CURRENT_COSTUME_KEY;
+    btn.setAttribute('aria-selected', active?'true':'false');
+    btn.tabIndex=active?0:-1;
+    btn.textContent=choices[btn.dataset.costumeTab]?.tab||btn.dataset.costumeTab;
+  });
+  textAt('costumeName',info.name);textAt('costumeDesc',info.desc);
+  const ideas=byId('costumeIdeas');
+  if(ideas){ideas.replaceChildren();(info.ideas||[]).forEach(item=>{
+    const li=document.createElement('li');li.textContent=item;ideas.append(li);
+  });}
 }
 function setupCostumes(){
-  const tabs=[...document.querySelectorAll('[data-costume-tab]')];if(!tabs.length)return;
-  const choices=CONTENT.bollywood?.costumeCategories||{};
-  function activate(key){const info=choices[key];if(!info)return;
-    tabs.forEach(btn=>{const active=btn.dataset.costumeTab===key;btn.setAttribute('aria-selected',active?'true':'false');btn.tabIndex=active?0:-1;if(choices[btn.dataset.costumeTab]?.tab)btn.textContent=choices[btn.dataset.costumeTab].tab;});
-    textAt('costumeName',info.name);textAt('costumeDesc',info.desc);
-    const ideas=byId('costumeIdeas');if(ideas){ideas.replaceChildren();(info.ideas||[]).forEach(item=>{const li=document.createElement('li');li.textContent=item;ideas.append(li);});}
-  }
-  tabs.forEach((t,i)=>{t.addEventListener('click',()=>activate(t.dataset.costumeTab));t.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();const next=tabs[(i+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length];next.focus();activate(next.dataset.costumeTab);}});});activate(tabs[0].dataset.costumeTab);
+  const tabs=[...document.querySelectorAll('[data-costume-tab]')];
+  tabs.forEach((tab,i)=>{
+    tab.addEventListener('click',()=>{CURRENT_COSTUME_KEY=tab.dataset.costumeTab;renderCostumes();});
+    tab.addEventListener('keydown',event=>{
+      if(event.key==='ArrowLeft'||event.key==='ArrowRight'){
+        event.preventDefault();
+        const next=tabs[(i+(event.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length];
+        next.focus();CURRENT_COSTUME_KEY=next.dataset.costumeTab;renderCostumes();
+      }
+    });
+  });
+  renderCostumes();
 }
 function setupPinterest(){
   const section=byId('pinterestStyleBoard');if(!section)return;
@@ -166,10 +202,106 @@ function setupPinterest(){
   ['pinterestBoardLink','pinterestBoardFallback','pinterestEmbedAnchor'].forEach(id=>{const a=byId(id);if(a)a.href=href;});
   const anchor=byId('pinterestEmbedAnchor');if(anchor){const width=section.getBoundingClientRect().width;anchor.setAttribute('data-pin-board-width',String(Math.min(850,Math.max(250,Math.round(width)-45))));}
   const gallery=byId('pinterestLocalGallery');const filenames=Array.isArray(window.WEDDING_BOLLYWOOD_LOOKBOOK)?window.WEDDING_BOLLYWOOD_LOOKBOOK:[];
-  filenames.slice(0,12).forEach(file=>{if(typeof file!=='string'||!/^[^\\/]+\.(?:png|jpe?g|webp|svg)$/i.test(file))return;const img=document.createElement('img');img.src='assets/'+encodeURIComponent(file);img.alt='Bollywood outfit inspiration';img.loading='lazy';gallery.append(img);});
+  filenames.slice(0,12).forEach(file=>{if(typeof file!=='string'||!/^[^\\/]+\.(?:png|jpe?g|webp|svg)$/i.test(file))return;const img=document.createElement('img');img.src='assets/'+encodeURIComponent(file);img.alt=UI().pinterestGalleryLabel||'Bollywood outfit inspiration';img.loading='lazy';gallery.append(img);});
   if(gallery.childElementCount)gallery.hidden=false;
   const script=document.createElement('script');script.src='https://assets.pinterest.com/js/pinit.js';script.defer=true;script.async=true;script.dataset.weddingPinterest='true';document.body.append(script);
 }
+
+/* Bilingual presentation. English text: content-config.js; Hindi: hindi-config.js. */
+function setTextFor(selector, value){
+  const el=document.querySelector(selector);
+  if(el&&value!==undefined)el.textContent=value;
+}
+function labelFor(id,value){
+  const el=document.querySelector(`label[for="${id}"]`);
+  if(el&&value!==undefined)el.textContent=value;
+}
+function applySharedTranslations(){
+  const ui=UI();
+  const skip=document.querySelector('.skip-link');if(skip)skip.textContent=ui.skip||'Skip to functions';
+  const nav=document.querySelector('nav.masthead-actions');if(nav)nav.setAttribute('aria-label',ui.quickNavigation||'Quick navigation');
+  const grid=byId('chapterGrid');if(grid)grid.setAttribute('aria-label',ui.cardsLabel||'Four wedding functions');
+  const detailLink=byId('detailLink');if(detailLink)detailLink.textContent=ui.detailLink||'Explore Bollywood costume ideas ↗';
+  const detailClose=document.querySelector('[data-close-dialog]');if(detailClose)detailClose.setAttribute('aria-label',ui.closingDetail||'Close details');
+  const rsvpClose=document.querySelector('[data-close-rsvp]');if(rsvpClose)rsvpClose.setAttribute('aria-label',ui.closingRSVP||'Close RSVP');
+  const rsvpIntro=byId('rsvpIntro')||document.querySelector('.rsvp-top .overline');
+  if(rsvpIntro)rsvpIntro.textContent=CONTENT.rsvp?.intro||'';
+  textAt('rsvpTitle',CONTENT.rsvp?.title);
+  const rsvpSubtitle=byId('rsvpSubtitle')||document.querySelector('.rsvp-top h2 + p');
+  if(rsvpSubtitle)rsvpSubtitle.textContent=CONTENT.rsvp?.subtitle||'';
+  const topRsvp=document.querySelector('.bollywood-page [data-open-rsvp]');
+  if(topRsvp)topRsvp.textContent=(HOME.rsvpButton||'RSVP')+' ↗';
+  labelFor('guestName',ui.nameLabel||'Your name');
+  labelFor('guestCount',ui.guestCountLabel||'Guests');
+  labelFor('attendance',ui.attendanceLabel||'Attending?');
+  labelFor('guestNote',ui.noteLabel||'A message (optional)');
+  const name=byId('guestName');if(name)name.placeholder=ui.namePlaceholder||'Full name';
+  const note=byId('guestNote');if(note)note.placeholder=ui.notePlaceholder||'Your blessings and wishes...';
+  const attendance=byId('attendance');if(attendance){
+    const selected=attendance.selectedIndex;
+    const opts=[['Yes, delighted to attend',ui.attendingYes],['Still confirming',ui.attendingMaybe],['Unable to attend',ui.attendingNo]];
+    opts.forEach(([eng,localized],i)=>{if(attendance.options[i]){
+      attendance.options[i].value=CURRENT_LANG==='hi'?(localized||eng):eng;
+      attendance.options[i].textContent=localized||eng;
+    }});
+    attendance.selectedIndex=selected;
+  }
+  const send=document.querySelector('.send-rsvp');if(send)send.textContent=ui.rsvpSend||'Prepare WhatsApp message ↗';
+  const copy=byId('copyRSVP');if(copy)copy.textContent=ui.rsvpCopy||'Copy RSVP message instead';
+  setTextFor('.rsvp-disclaimer',ui.rsvpDisclaimer||'WhatsApp opens a draft; you choose the recipient and tap Send.');
+  const dressLink=document.querySelector('.spotlight-copy .spotlight-cta');if(dressLink)dressLink.textContent=ui.dressCodeLink||'Find your character ↘';
+  const tablist=document.querySelector('.costume-tabs');if(tablist)tablist.setAttribute('aria-label',ui.costumesAria||'Costume inspiration categories');
+  const metadata=document.querySelector('meta[name="description"]');
+  if(metadata)metadata.setAttribute('content',CURRENT_LANG==='hi' ? (document.body.classList.contains('home-page')?'आकांक्षा और विकाश का विवाह निमंत्रण · १०–१३ दिसंबर २०२६ · झाँसी।':'११ दिसंबर २०२६ को बॉलीवुड किरदारों से सजी संगीत की रात।') : (document.body.classList.contains('home-page')?'Four illustrated celebrations, one beautiful forever. Akanksha & Vikash · 10–13 December 2026 · Jhansi.':'Raas to Reel: Bollywood character night at Akanksha & Vikash’s wedding Sangeet, 11 December 2026.'));
+  const sangeetStage=document.querySelector('.spotlight-stage');if(sangeetStage)sangeetStage.setAttribute('aria-label',ui.sangeetThemeAria||'Bollywood Sangeet theme');
+  const filmPoster=document.querySelector('.spotlight-poster img');if(filmPoster)filmPoster.alt=ui.posterAlt||'Bollywood Night illustration';
+  const back=document.querySelector('.bollywood-page .masthead-actions a');
+  if(back)back.textContent=CONTENT.bollywood?.backLabel||'← Main invitation';
+  document.querySelectorAll('.language-switch button[data-lang]').forEach(button=>{
+    button.setAttribute('aria-pressed',String(button.dataset.lang===CURRENT_LANG));
+  });
+  const switcher=document.querySelector('.language-switch');
+  if(switcher)switcher.setAttribute('aria-label',CURRENT_LANG==='hi'?'भाषा चुनें':'Choose language');
+  // Keep language selected across navigation, even if storage is unavailable.
+  document.querySelectorAll('a[href^="index.html"],a[href^="bollywood.html"]').forEach(link=>{
+    const page=link.getAttribute('href').split('?')[0];
+    link.href=page+'?lang='+CURRENT_LANG;
+  });
+  if(document.body.classList.contains('home-page')){
+    document.title=(HOME.bride||'')+' & '+(HOME.groom||'')+' · '+(CURRENT_LANG==='hi'?'विवाह निमंत्रण':'Wedding Invitation');
+  }else{
+    document.title=(CURRENT_LANG==='hi'?'रास से रील तक · बॉलीवुड संगीत':'Raas to Reel · Bollywood Sangeet')+' · '+(HOME.bride||'')+' & '+(HOME.groom||'');
+  }
+}
+function setLanguage(lang,remember=true){
+  CURRENT_LANG=lang==='hi'?'hi':'en';
+  CONTENT=CURRENT_LANG==='hi'?(window.WEDDING_HINDI||window.WEDDING_CONTENT||{}):(window.WEDDING_CONTENT||{});
+  HOME=CONTENT.site||{};
+  EVENTS=CONTENT.events||{};
+  document.documentElement.lang=CURRENT_LANG;
+  document.body.setAttribute('data-language',CURRENT_LANG);
+  setTextFromConfig();
+  renderCards();
+  setBollywoodText();
+  renderCostumes();
+  applySharedTranslations();
+  if(CURRENT_DETAIL_KEY&&byId('detailDialog')?.open)openEvent(CURRENT_DETAIL_KEY);
+  if(remember){try{localStorage.setItem('wedding-language',CURRENT_LANG);}catch(err){}
+    try{const url=new URL(window.location.href);url.searchParams.set('lang',CURRENT_LANG);
+      window.history.replaceState(null,'',url.href);
+    }catch(err){}
+  }
+}
+function initialLanguage(){
+  try{const value=new URL(window.location.href).searchParams.get('lang');if(value==='hi'||value==='en')return value;}catch(err){}
+  try{const saved=localStorage.getItem('wedding-language');if(saved==='hi'||saved==='en')return saved;}catch(err){}
+  return 'en';
+}
+function setupLanguageSwitch(){
+  document.querySelectorAll('.language-switch button[data-lang]').forEach(button=>{
+    button.addEventListener('click',()=>setLanguage(button.dataset.lang));
+  });
+}
 // Images on the Bollywood page use the same image-config.js as the invitation.
 document.querySelectorAll('img[data-image]').forEach(img=>{const url=weddingImageUrl(img.dataset.image);if(url)img.src=url;});
-setTextFromConfig();renderCards();setupDialogs();setupRSVP();setupCalendar();setBollywoodText();setupCostumes();setupPinterest();
+setupLanguageSwitch();setLanguage(initialLanguage(),false);setupDialogs();setupRSVP();setupCalendar();setupCostumes();setupPinterest();
